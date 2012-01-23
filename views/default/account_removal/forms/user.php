@@ -4,9 +4,11 @@
 	$type = $vars["type"];
 	
 	if($user instanceof ElggUser){
-		$group_admins_allowed = get_plugin_setting("groupadmins_allowed", "account_removal");
-		$user_options = get_plugin_setting("user_options", "account_removal");
-		$reason_required = get_plugin_setting("reason_required", "account_removal");
+		$group_admins_allowed = elgg_get_plugin_setting("groupadmins_allowed", "account_removal");
+		$user_options = elgg_get_plugin_setting("user_options", "account_removal");
+		$reason_required = elgg_get_plugin_setting("reason_required", "account_removal");
+		
+		$show_required = false;
 		
 		$group_options = array(
 			"type" => "group",
@@ -17,18 +19,18 @@
 		);
 		
 		if(($group_admins_allowed != "yes") && ($group_list = elgg_list_entities($group_options))){
-			$form = elgg_view("page_elements/contentwrapper", array("body" => elgg_echo("account_removal:forms:user:error:group_owner")));
+			$form = elgg_view_module("info", "", elgg_echo("account_removal:forms:user:error:group_owner"));
 			$form .= $group_list;
 		} else {
 			
-			$form_data .= elgg_view("input/hidden", array("internalname" => "user_guid", "value" => $user->getGUID()));
+			$form_data .= elgg_view("input/hidden", array("name" => "user_guid", "value" => $user->getGUID()));
 			
 			if(empty($type)){
 				switch($user_options){
 					case "remove":
 						$js_confirm = elgg_echo("account_removal:forms:user:js:confirm:remove");
 						
-						$form_data .= elgg_view("input/hidden", array("internalname" => "type", "value" => "remove"));
+						$form_data .= elgg_view("input/hidden", array("name" => "type", "value" => "remove"));
 						$form_data .= "<div>" . elgg_echo("account_removal:forms:user:user_options:description:remove") . "</div>";
 						$form_data .= "<div>" . elgg_echo("account_removal:forms:user:user_options:description:general") . "</div>";
 						
@@ -36,61 +38,67 @@
 					case "disable_and_remove":
 						$form_data .= "<div>" . elgg_echo("account_removal:forms:user:user_options:description:disable_and_remove") . "</div>";
 						$form_data .= "<div>" . elgg_echo("account_removal:forms:user:user_options:description:general") . "</div>";
-						$form_data .= "<br />";
 						
 						$options_values = array(
 							"disable" => elgg_echo("account_removal:forms:user:user_options:disable"),
 							"remove" => elgg_echo("account_removal:forms:user:user_options:remove")
 						);
 						
-						$form_data .= elgg_view("input/pulldown", array("internalname" => "type", "options_values" => $options_values));
+						$form_data .= "<div>";
+						$form_data .= elgg_view("input/dropdown", array("name" => "type", "options_values" => $options_values));
+						$form_data .= "</div>";
 						
 						break;
 					case "disable":
 					default:
 						$js_confirm = elgg_echo("account_removal:forms:user:js:confirm:disable");
 						
-						$form_data .= elgg_view("input/hidden", array("internalname" => "type", "value" => "disable"));
+						$form_data .= elgg_view("input/hidden", array("name" => "type", "value" => "disable"));
 						$form_data .= "<div>" . elgg_echo("account_removal:forms:user:user_options:description:disable") . "</div>";
 						$form_data .= "<div>" . elgg_echo("account_removal:forms:user:user_options:description:general") . "</div>";
+						
 						break;
 				}
 				
-				$form_data .= elgg_view("input/hidden", array("internalname" => "reason", "value" => "not_yet"));
+				$form_data .= elgg_view("input/hidden", array("name" => "reason", "value" => "not_yet"));
 			
 			} else {
 				$js_confirm = elgg_echo("account_removal:forms:user:js:confirm:" . $type);
 				
-				$form_data .= elgg_view("input/hidden", array("internalname" => "confirm_token", "value" => get_input("confirm_token")));
-				$form_data .= elgg_view("input/hidden", array("internalname" => "type", "value" => $type));
+				$form_data .= elgg_view("input/hidden", array("name" => "confirm_token", "value" => get_input("confirm_token")));
+				$form_data .= elgg_view("input/hidden", array("name" => "type", "value" => $type));
+				
 				$form_data .= "<div>" . elgg_echo("account_removal:forms:user:user_options:description:" . $type) . "</div>";
 				
-				$form_data .= "<br />";
-				$form_data .= "<div class='account_removal_form_label'>";
+				$form_data .= "<div>";
+				$form_data .= "<label>";
 				$form_data .= elgg_echo("account_removal:forms:user:reason");
 				if($reason_required == "yes"){
+					$show_required = true;
 					$form_data .= "*";
 				}
+				$form_data .= "</label>";
+				$form_data .= elgg_view("input/longtext", array("name" => "reason"));
 				$form_data .= "</div>";
-				$form_data .= elgg_view("input/longtext", array("internalname" => "reason"));
 			}
 			
-			$form_data .= "<div>";
+			$form_data .= "<div class='elgg-foot'>";
 			$form_data .= elgg_view("input/submit", array("value" => elgg_echo("submit")));
 			$form_data .= "</div>";
 			
-			if($reason_required == "yes"){
-				$form_data .= "<div id='account_removal_forms_required'>*: " . elgg_echo("account_removal:forms:user:required") . "</div>";
+			if($show_required){
+				$form_data .= "<div class='elgg-subtext'>*: " . elgg_echo("account_removal:forms:user:required") . "</div>";
 			}
 			
 			$form = elgg_view("input/form", array("body" => $form_data,
 													"action" => $vars["url"] . "action/account_removal/remove",
-													"internalid" => "account_removal_user_form"));
+													"internalid" => "account_removal_user_form",
+													"class" => "elgg-form-alt"));
 			
-			$form = elgg_view("page_elements/contentwrapper", array("body" => $form));
+			$form = elgg_view_module("info", "", $form);
 		}
 	} else {
-		$form = elgg_view("page_elements/contentwrapper", array("body" => elgg_echo("account_removal:forms:user:error:no_user")));
+		$form = elgg_view_module("info", "", elgg_echo("account_removal:forms:user:error:no_user"));
 	}
 
 	echo $form; 
@@ -105,7 +113,7 @@
 			<?php if(!empty($type) && ($reason_required == "yes")) { ?>
 			if($(this).find('textarea[name="reason"]').val() == ""){
 				error_count++;
-				error_msg += "<?php echo elgg_echo("account_removal:forms:user:js:error:reason"); ?>\n";
+				error_msg += elgg.echo("account_removal:forms:user:js:error:reason") + "\n";
 			}
 			<?php } ?>
 
@@ -114,13 +122,13 @@
 			} else {
 				<?php if(empty($type) && ($user_options == "disable_and_remove")){ ?>
 				
-				if($(this).find('select[name="user_options"] option:selected').val() == "remove"){
-					var confirm_msg = "<?php echo elgg_echo("account_removal:forms:user:js:confirm:remove"); ?>";
+				if($(this).find('select[name="type"] option:selected').val() == "remove"){
+					var confirm_msg = elgg.echo("account_removal:forms:user:js:confirm:remove");
 				} else {
-					var confirm_msg = "<?php echo elgg_echo("account_removal:forms:user:js:confirm:disable"); ?>";
+					var confirm_msg = elgg.echo("account_removal:forms:user:js:confirm:disable");
 				}
 				<?php } else { ?>
-				var confirm_msg = "<?php echo $js_confirm; ?>";
+				var confirm_msg = "<?php echo addslashes($js_confirm); ?>";
 				<?php } ?>
 				
 				if(confirm(confirm_msg)){

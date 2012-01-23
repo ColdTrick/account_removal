@@ -1,24 +1,22 @@
 <?php 
 
-	global $CONFIG;
-
 	gatekeeper();
 	
-	$user_guid = get_input("user_guid");
+	$user_guid = (int) get_input("user_guid");
 	$type = get_input("type");
 	$reason = get_input("reason");
 	$confirm_token = get_input("confirm_token");
 	
 	$forward_url = REFERER;
 	
-	if($user_guid == get_loggedin_userid() && isadminloggedin()){
+	if(($user_guid == elgg_get_logged_in_user_guid()) && elgg_is_admin_logged_in()){
 		register_error(elgg_echo("account_removal:actions:remove:error:user_guid:admin"));
-	} elseif($user_guid != get_loggedin_userid() && !isadminloggedin()){
+	} elseif(($user_guid != elgg_get_logged_in_user_guid()) && !elgg_is_admin_logged_in()){
 		register_error(elgg_echo("account_removal:actions:remove:error:user_guid:user"));
 	} elseif($user = get_user($user_guid)) {
-		$group_admins_allowed = get_plugin_setting("groupadmins_allowed", "account_removal");
-		$user_options = get_plugin_setting("user_options", "account_removal");
-		$reason_required = get_plugin_setting("reason_required", "account_removal");
+		$group_admins_allowed = elgg_get_plugin_setting("groupadmins_allowed", "account_removal");
+		$user_options = elgg_get_plugin_setting("user_options", "account_removal");
+		$reason_required = elgg_get_plugin_setting("reason_required", "account_removal");
 		
 		$group_options = array(
 			"type" => "group",
@@ -26,9 +24,9 @@
 			"count" => true
 		);
 		
-		if($group_admins_allowed != "yes" && elgg_get_entities($group_options)){
+		if(($group_admins_allowed != "yes") && elgg_get_entities($group_options)){
 			register_error(elgg_echo("account_removal:actions:remove:error:group_owner"));
-		} elseif($reason_required == "yes" && empty($reason)){
+		} elseif(($reason_required == "yes") && empty($reason)){
 			register_error(elgg_echo("account_removal:actions:remove:error:reason"));
 		} else {
 			// make sure the given action is allowed
@@ -80,7 +78,7 @@
 					
 					system_message(elgg_echo("account_removal:actions:remove:success:request"));
 					
-					$forward_url = $CONFIG->wwwroot . "pg/settings";
+					$forward_url = "settings/user/" . $user->username;
 				}
 			} else {
 				register_error(elgg_echo("account_removal:actions:remove:error:type_match"));
@@ -91,5 +89,3 @@
 	}
 
 	forward($forward_url);
-
-?>

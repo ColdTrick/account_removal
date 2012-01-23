@@ -93,10 +93,7 @@ Again thank you for your contributions.",
 		'account_removal:actions:remove:success:disable' => "Your account was successfully disabled",
 		'account_removal:actions:remove:success:request' => "You have successfully requested to disable / remove your account. Please check your e-mail for a confirmation link.",
 		
-		'' => "",
-		
+		'' => "",		
 	);
 	
 	add_translation("en", $english);
-
-?>

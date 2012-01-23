@@ -28,18 +28,18 @@
 	}
 
 	function account_removal_send_notification($type, $user_guid){
-		global $CONFIG;
-		
 		$result = false;
+		
+		$site = elgg_get_site_entity();
 		
 		if(!empty($user_guid) && ($user = get_user($user_guid)) && in_array($type, array("remove", "disable"))){
 			$token = acount_removal_generate_confirm_token($type, $user_guid);
-			$url = $CONFIG->wwwroot . "pg/account_removal/" . $type . "/?confirm_token=" . $token;
+			$url = elgg_get_site_url() . "account_removal/" . $type . "/?confirm_token=" . $token;
 			
-			$subject = sprintf(elgg_echo("account_removal:message:" . $type . ":subject"), $CONFIG->site->name);
-			$message = sprintf(elgg_echo("account_removal:message:" . $type . ":body"), $user->name, $url);
+			$subject = elgg_echo("account_removal:message:" . $type . ":subject", array($site->name));
+			$message = elgg_echo("account_removal:message:" . $type . ":body", array($user->name, $url));
 			
-			notify_user($user_guid, $CONFIG->site_guid, $subject, $message, null, "email");
+			notify_user($user_guid, $site->getGUID(), $subject, $message, null, "email");
 			
 			$result = true;
 		}
@@ -48,20 +48,19 @@
 	}
 	
 	function account_removal_send_thank_notification($type, $user_guid){
-		global $CONFIG;
-		
 		$result = false;
 		
+		$site = elgg_get_site_entity();
+		
 		if(!empty($user_guid) && ($user = get_user($user_guid)) && in_array($type, array("remove", "disable"))){
-			$subject = sprintf(elgg_echo("account_removal:message:thank_you:" . $type . ":subject"), $CONFIG->site->name);
-			$message = sprintf(elgg_echo("account_removal:message:thank_you:" . $type . ":body"), $user->name, $CONFIG->site->name);
+			$subject = elgg_echo("account_removal:message:thank_you:" . $type . ":subject", array($site->name));
+			$message = elgg_echo("account_removal:message:thank_you:" . $type . ":body", array($user->name, $site->name));
 			
-			notify_user($user_guid, $CONFIG->site_guid, $subject, $message, null, "email");
+			notify_user($user_guid, $site->getGUID(), $subject, $message, null, "email");
 			
 			$result = true;
 		}
 		
 		return $result;
 	}
-
-?>
+	

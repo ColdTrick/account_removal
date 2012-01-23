@@ -6,7 +6,3 @@
 #account_removal_user_form .account_removal_form_label {
 	font-weight: bold;
 }
-
-#account_removal_forms_required {
-	color: gray;
-}
