@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+	<field key="author" value="ColdTrick IT Solutions" />
+	<field key="version" value="0.2.1" />
+	<field key="description" value="Let user disable or remove themselves" />
+	<field key="website" value="http://www.coldtrick.com/" />
+	<field key="copyright" value="(C) ColdTrick IT Solutions 2009" />
+	<field key="licence" value="GNU Public License version 2" />
+	<field key="elgg_version" value="2010040201" />
+</plugin_manifest>
+<!-- 
+
+=========================
+Features
+=========================
+
+The ability for users to disable/remove themselves.
+
+- User can delete him/herself by going to Settings -> Account Removal
+- User needs to confirm removal by mail
+- Admin settings to configure
+	- disable or delete or both
+	- reason required 
+- Admins can't remove themselves
+
+=========================
+ToDo:
+=========================
+- retaining period
+- delete confirm needed for admin
+
+=========================
+Version Information
+=========================
+0.2.1 (2011-05-03):
+	- fixed: group owner check for multi site
+
+0.2 (2011-02-10):
+	- added: confirmation mails
+
+0.1 (2010-11-23):
+	- first release
+
+-->
