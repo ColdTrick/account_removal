@@ -4,20 +4,22 @@
 
 	function account_removal_init(){
 		// extend the CSS with plugin CSS
-		elgg_extend_view("css", "account_removal/css");
+		elgg_extend_view("css/elgg", "account_removal/css");
 		
 		// register pagehandler for nice URL's
-		register_page_handler("account_removal", "account_removal_page_handler");
+		elgg_register_page_handler("account_removal", "account_removal_page_handler");
 	}
 	
 	function account_removal_pagesetup(){
-		global $CONFIG;
-		
-		$context = get_context();
-		
-		if(($context == "settings") && isloggedin() && !isadminloggedin()){
-			add_submenu_item(elgg_echo('account_removal:menu:title'), $CONFIG->wwwroot . "pg/account_removal");
+		if(($user = elgg_get_logged_in_user_entity()) && !$user->isAdmin()){
+			elgg_register_menu_item("page", ElggMenuItem::factory(array(
+				"name" => "account_removal",
+				"text" => elgg_echo('account_removal:menu:title'),
+				"href" => "account_removal",
+				"context" => "settings"
+			)));
 		}
+		
 	}
 	
 	function account_removal_page_handler($page){
@@ -40,10 +42,8 @@
 	}
 
 	// register default Elgg events
-	register_elgg_event_handler("init", "system", "account_removal_init");
-	register_elgg_event_handler("pagesetup", "system", "account_removal_pagesetup");
+	elgg_register_event_handler("init", "system", "account_removal_init");
+	elgg_register_event_handler("pagesetup", "system", "account_removal_pagesetup");
 
 	// register actions
-	register_action("account_removal/remove", false, dirname(__FILE__) . "/actions/remove.php");
-
-?>
+	elgg_register_action("account_removal/remove", dirname(__FILE__) . "/actions/remove.php");
