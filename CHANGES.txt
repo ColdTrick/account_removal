@@ -1,4 +1,8 @@
 = Version History =
+x.x:
+
+- fixed: depricated notice
+
 1.0 (2012-01-23):
 
 - Elgg 1.8 version of this plugin

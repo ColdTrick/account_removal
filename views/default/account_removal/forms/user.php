@@ -92,7 +92,7 @@
 			
 			$form = elgg_view("input/form", array("body" => $form_data,
 													"action" => $vars["url"] . "action/account_removal/remove",
-													"internalid" => "account_removal_user_form",
+													"id" => "account_removal_user_form",
 													"class" => "elgg-form-alt"));
 			
 			$form = elgg_view_module("info", "", $form);
