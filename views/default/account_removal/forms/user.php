@@ -23,7 +23,7 @@
 			$form .= $group_list;
 		} else {
 			
-			$form_data .= elgg_view("input/hidden", array("name" => "user_guid", "value" => $user->getGUID()));
+			$form_data = elgg_view("input/hidden", array("name" => "user_guid", "value" => $user->getGUID()));
 			
 			if(empty($type)){
 				switch($user_options){
