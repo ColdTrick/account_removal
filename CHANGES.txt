@@ -1,6 +1,7 @@
 = Version History =
-x.x:
+1.0.1 (2013-04-05):
 
+- changed: README.txt to README.md for GitHub
 - fixed: depricated notice
 
 1.0 (2012-01-23):
