@@ -1,4 +1,5 @@
-<?php ?>
+<?php
+?>
 #account_removal_user_form select[name='user_options'] {
 	margin: 10px 0px;
 }
