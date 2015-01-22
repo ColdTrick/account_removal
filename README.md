@@ -2,6 +2,8 @@ Account Removal
 =============== 
 
 [![Build Status](https://scrutinizer-ci.com/g/ColdTrick/account_removal/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/account_removal/build-status/master)
+[![Latest Stable Version](https://poser.pugx.org/coldtrick/account_removal/v/stable.svg)](https://packagist.org/packages/coldtrick/account_removal)
+[![License](https://poser.pugx.org/coldtrick/account_removal/license.svg)](https://packagist.org/packages/coldtrick/account_removal)
 
 Offers users the ability to remove their account from the network
 

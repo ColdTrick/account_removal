@@ -1,6 +1,6 @@
 <?php
 
-gatekeeper();
+elgg_gatekeeper();
 
 $username = get_input("username");
 $type = get_input("type");
@@ -11,7 +11,7 @@ if (!empty($username)) {
 	$user = elgg_get_logged_in_user_entity();
 }
 
-if (!empty($user)) {
+if (empty($user)) {
 	register_error(elgg_echo("account_removal:user:error:no_user"));
 	forward(REFERER);
 }

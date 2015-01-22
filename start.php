@@ -37,7 +37,7 @@ function account_removal_pagesetup() {
 	elgg_register_menu_item("page", ElggMenuItem::factory(array(
 		"name" => "account_removal",
 		"text" => elgg_echo('account_removal:menu:title'),
-		"href" => "account_removal",
+		"href" => "account_removal/" . $user->username,
 		"context" => "settings"
 	)));
 	
