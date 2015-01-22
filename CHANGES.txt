@@ -1,6 +1,6 @@
 = Version History =
 
-x.x:
+1.0.2 (2015-01-22):
 
 - applied Elgg coding standards
 
