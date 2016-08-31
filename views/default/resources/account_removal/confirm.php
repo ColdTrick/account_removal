@@ -4,22 +4,22 @@ elgg_gatekeeper();
 
 $username = elgg_extract('username', $vars);
 $type = elgg_extract('type', $vars);
+$token = get_input('confirm_token');
 
+$user = false;
 if (!empty($username)) {
 	$user = get_user_by_username($username);
-} else {
-	$user = elgg_get_logged_in_user_entity();
 }
 
-if (empty($user)) {
+if (!($user instanceof ElggUser)) {
 	register_error(elgg_echo('account_removal:user:error:no_user'));
 	forward(REFERER);
 }
 
-if ($user->isAdmin() && ($user->getGUID() == elgg_get_logged_in_user_guid())) {
+if ($user->isAdmin()) {
 	register_error(elgg_echo('account_removal:user:error:admin'));
 	forward(REFERER);
-} elseif (!$user->isAdmin() && ($user->getGUID() != elgg_get_logged_in_user_guid()) && !elgg_is_admin_logged_in()) {
+} elseif (!$user->canEdit()) {
 	register_error(elgg_echo('account_removal:user:error:user'));
 	forward(REFERER);
 }
@@ -35,9 +35,10 @@ elgg_push_breadcrumb(elgg_echo('account_removal:menu:title'));
 // build page elements
 $title_text = elgg_echo('account_removal:user:title');
 
-$body = elgg_view('account_removal/forms/user', [
+$body = elgg_view_form('account_removal/confirm', [], [
 	'entity' => $user,
 	'type' => $type,
+	'token' => $token,
 ]);
 
 // need to forward or display a page

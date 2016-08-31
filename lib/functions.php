@@ -4,6 +4,34 @@
  */
 
 /**
+ * Get the hmac token generator for account removal
+ *
+ * @param string $type what kind of token
+ * @param int    $user_guid the user_guid to generate for
+ *
+ * @access private
+ *
+ * @return false|\Elgg\Security\Hmac
+ */
+function account_removal_get_hmac($type, $user_guid) {
+	
+	$user = get_user($user_guid);
+	if (empty($user)) {
+		return false;
+	}
+	
+	if (!in_array($type, ['remove', 'disable'])) {
+		return false;
+	}
+	
+	return elgg_build_hmac([
+		$user->getGUID(),
+		$type,
+		$user->salt,
+	]);
+}
+
+/**
  * Generate a validation token
  *
  * @param string $type      what kind of token
@@ -12,16 +40,13 @@
  * @return bool|string
  */
 function acount_removal_generate_confirm_token($type, $user_guid) {
-	$result = false;
 	
-	if (!empty($user_guid) && ($user = get_user($user_guid)) && in_array($type, array("remove", "disable"))) {
-		$site_secret = get_site_secret();
-		$user_salt = $user->salt;
-		
-		$result = md5($site_secret . $user_guid . $type . $user_salt);
+	$hmac = account_removal_get_hmac($type, $user_guid);
+	if (empty($hmac)) {
+		return false;
 	}
 	
-	return $result;
+	return $hmac->getToken();
 }
 
 /**
@@ -34,17 +59,13 @@ function acount_removal_generate_confirm_token($type, $user_guid) {
  * @return bool
  */
 function acount_removal_validate_confirm_token($token, $type, $user_guid) {
-	$result = false;
 	
-	if (!empty($user_guid) && !empty($token) && in_array($type, array("remove", "disable"))) {
-		$new_token = acount_removal_generate_confirm_token($type, $user_guid);
-		
-		if ($token === $new_token) {
-			$result = true;
-		}
+	$hmac = account_removal_get_hmac($type, $user_guid);
+	if (empty($hmac)) {
+		return false;
 	}
 	
-	return $result;
+	return $hmac->matchesToken($token);
 }
 
 /**
@@ -56,23 +77,36 @@ function acount_removal_validate_confirm_token($token, $type, $user_guid) {
  * @return bool
  */
 function account_removal_send_notification($type, $user_guid) {
-	$result = false;
 	
 	$site = elgg_get_site_entity();
 	
-	if (!empty($user_guid) && ($user = get_user($user_guid)) && in_array($type, array("remove", "disable"))) {
-		$token = acount_removal_generate_confirm_token($type, $user_guid);
-		$url = elgg_get_site_url() . "account_removal/" . $type . "/?confirm_token=" . $token;
-		
-		$subject = elgg_echo("account_removal:message:" . $type . ":subject", array($site->name));
-		$message = elgg_echo("account_removal:message:" . $type . ":body", array($user->name, $url));
-		
-		notify_user($user_guid, $site->getGUID(), $subject, $message, null, "email");
-		
-		$result = true;
+	$user = get_user($user_guid);
+	if (empty($user)) {
+		return false;
 	}
 	
-	return $result;
+	if (!in_array($type, ['remove', 'disable'])) {
+		return false;
+	}
+	
+	$token = acount_removal_generate_confirm_token($type, $user_guid);
+	if (empty($token)) {
+		return false;
+	}
+	
+	$url = elgg_normalize_url("account_removal/{$user->username}/confirm/{$type}/?confirm_token={$token}");
+	
+	$subject = elgg_echo("account_removal:message:{$type}:subject", [
+		$site->name,
+	]);
+	$message = elgg_echo("account_removal:message:{$type}:body", [
+		$user->name,
+		$url,
+	]);
+	
+	notify_user($user_guid, $site->getGUID(), $subject, $message, null, 'email');
+	
+	return true;
 }
 
 /**
@@ -84,18 +118,27 @@ function account_removal_send_notification($type, $user_guid) {
  * @return bool
  */
 function account_removal_send_thank_notification($type, $user_guid) {
-	$result = false;
+	
+	$user = get_user($user_guid);
+	if (empty($user)) {
+		return false;
+	}
+	
+	if (!in_array($type, ['remove', 'disable'])) {
+		return false;
+	}
 	
 	$site = elgg_get_site_entity();
 	
-	if (!empty($user_guid) && ($user = get_user($user_guid)) && in_array($type, array("remove", "disable"))) {
-		$subject = elgg_echo("account_removal:message:thank_you:" . $type . ":subject", array($site->name));
-		$message = elgg_echo("account_removal:message:thank_you:" . $type . ":body", array($user->name, $site->name));
-		
-		notify_user($user_guid, $site->getGUID(), $subject, $message, null, "email");
-		
-		$result = true;
-	}
+	$subject = elgg_echo("account_removal:message:thank_you:{$type}:subject", [
+		$site->name,
+	]);
+	$message = elgg_echo("account_removal:message:thank_you:{$type}:body", [
+		$user->name,
+		$site->name,
+	]);
 	
-	return $result;
+	notify_user($user_guid, $site->getGUID(), $subject, $message, null, 'email');
+	
+	return true;
 }

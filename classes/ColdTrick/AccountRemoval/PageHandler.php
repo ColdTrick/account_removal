@@ -13,17 +13,20 @@ class PageHandler {
 	 */
 	public static function accountRemoval($page) {
 		
-		switch (elgg_extract(0, $page)) {
-			case 'remove':
-			case 'disable':
-				$vars['type'] = $page[0];
+		$vars = [
+			'username' => elgg_extract(0, $page),
+		];
+		
+		$action = elgg_extract(1, $page);
+		
+		switch ($action) {
+			case 'confirm':
+				$vars['type'] = elgg_extract(2, $page);
 				
-				echo elgg_view_resource('account_removal/user', $vars);
+				echo elgg_view_resource('account_removal/confirm', $vars);
 				break;
 			default:
-				$vars['username'] = elgg_extract(0, $page);
-				
-				echo elgg_view_resource('account_removal/user', $vars);
+				echo elgg_view_resource('account_removal/choices', $vars);
 				break;
 		}
 		

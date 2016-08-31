@@ -28,18 +28,16 @@ return [
 	'account_removal:forms:user:user_options:description:disable' => "You can <b>disable</b> your account here. This will cause your profile to be disabled. This means your profile details are no longer visible and your account will not appear in any user listing.<br /><br />All your content, like blogs, files and pages will still be accessable by other users.",
 	'account_removal:forms:user:user_options:description:remove' => "You can <b>remove</b> your account here. This will cause your profile to be completely removed. This means your profile details are no longer visible and your account will not appear in any user listing.<br /><br />Also <b>all</b> your content, like blogs, files and pages will be removed. This action can not be undone!",
 	'account_removal:forms:user:user_options:description:disable_and_remove' => "You can <b>disable</b> or <b>remove</b> your account here. This will disable or remove your profile. This means your profile details are no longer visible and your account will not appear in any user listing.<br /><br />If you choose to <b>disable</b> your account, all your content, like blogs, files and pages will still be accessable by other users.<br />If you choose to <b>remove</b> your account, all your content, like blogs, files and pages will be removed. This action can not be undone!",
-	'account_removal:forms:user:user_options:description:general' => "<br />When you submit this Account Removal request you will receive a confirmation email in your email box. The Account Removal will be effectuated when you follow the instructions in this email.",
+	'account_removal:forms:user:user_options:description:disable_and_remove:choice' => "I wish to",
+	'account_removal:forms:user:user_options:description:general' => "When you submit this Account Removal request you will receive a confirmation email in your email box. The Account Removal will be effectuated when you follow the instructions in this email.",
 	
 	'account_removal:forms:user:user_options:disable' => "Disable this account",
 	'account_removal:forms:user:user_options:remove' => "Remove this account",
 	'account_removal:forms:user:reason' => "Please enter a reason for this Account Removal",
-	'account_removal:forms:user:required' => "This information is required",
-
-	'account_removal:forms:user:js:error:reason' => "You need to provide a reason",
+	
 	'account_removal:forms:user:js:confirm:disable' => "Are you sure you wish to disable this account?",
 	'account_removal:forms:user:js:confirm:remove' => "Are you sure you wish to remove this account?",
 
-	'account_removal:forms:user:error:no_user' => "Invalid input; User not found",
 	'account_removal:forms:user:error:group_owner' => "You are currently not able to disable or remove yourself as you are still group admin of the following groups.",
 
 	// confirmation message
@@ -82,8 +80,6 @@ Again thank you for your contributions.",
 
 	// user removal action
 	'account_removal:actions:remove:error:user_guid:admin' => "Admins are not allowed to disable / remove themselves",
-	'account_removal:actions:remove:error:user_guid:user' => "You can only disable / remove yourself",
-	'account_removal:actions:remove:error:user_guid:unknown' => "Invalid input; User not found",
 	'account_removal:actions:remove:error:group_owner' => "You are currently not able to disable or remove yourself as you are still group admin of the following groups",
 	'account_removal:actions:remove:error:reason' => "You need to provide a reason",
 	'account_removal:actions:remove:error:type_match' => "The requested account removal type is not allowed",
