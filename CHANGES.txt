@@ -1,6 +1,12 @@
 Version history
 ===============
 
+3.0 (2016-09-15):
+
+- changed: moved page menu item to plugin hook
+- changed: pages moved to resources and page handler in class
+- changed: rewrite of the plugin for Elgg 2.1
+
 2.0 (2015-01-22):
 
 - changes for Elgg 1.9
