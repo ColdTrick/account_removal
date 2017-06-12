@@ -104,7 +104,7 @@ function account_removal_send_notification($type, $user_guid) {
 		$url,
 	]);
 	
-	notify_user($user_guid, $site->getGUID(), $subject, $message, null, 'email');
+	notify_user($user_guid, $site->getGUID(), $subject, $message, [], 'email');
 	
 	return true;
 }
@@ -138,7 +138,7 @@ function account_removal_send_thank_notification($type, $user_guid) {
 		$site->name,
 	]);
 	
-	notify_user($user_guid, $site->getGUID(), $subject, $message, null, 'email');
+	notify_user($user_guid, $site->getGUID(), $subject, $message, [], 'email');
 	
 	return true;
 }
