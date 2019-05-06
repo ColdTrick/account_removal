@@ -57,13 +57,14 @@ switch ($user_options) {
 			'value' => elgg_echo('account_removal:forms:user:user_options:description:general'),
 		]);
 		
-		echo elgg_view_input('select', [
+		echo elgg_view_field([
+			'#type' => 'select',
 			'name' => 'type',
-			'label' => elgg_echo('account_removal:forms:user:user_options:description:disable_and_remove:choice'),
-			'options_values' => [
-				'disable' => elgg_echo('account_removal:forms:user:user_options:disable'),
-				'remove' => elgg_echo('account_removal:forms:user:user_options:remove'),
-			],
+			'#label' => elgg_echo('account_removal:forms:user:user_options:description:disable_and_remove:choice'),
+			'options' => [
+					'disable' => elgg_echo('account_removal:forms:user:user_options:disable'),
+					'remove' => elgg_echo('account_removal:forms:user:user_options:remove'),
+				],
 		]);
 		
 		break;
