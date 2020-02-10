@@ -6,7 +6,7 @@
 /**
  * Get the hmac token generator for account removal
  *
- * @param string $type what kind of token
+ * @param string $type      what kind of token
  * @param int    $user_guid the user_guid to generate for
  *
  * @access private
