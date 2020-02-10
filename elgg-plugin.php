@@ -1,6 +1,8 @@
 <?php
+require_once __DIR__ . '/lib/functions.php';
 
 return [
+	'bootstrap' => Bootstrap::class,
 	'actions' => [
 		'account_removal/choices' => [],
 		'account_removal/confirm' => [],
