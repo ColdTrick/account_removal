@@ -1,4 +1,6 @@
 <?php
+use ColdTrick\AccountRemoval\Bootstrap;
+
 require_once __DIR__ . '/lib/functions.php';
 
 return [
